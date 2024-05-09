@@ -8,23 +8,23 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name="Books")
+@Table(name="books")
 public class BookModel implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID idBook;
+    private UUID id;
     private String name;
     private BigDecimal value;
 
-    public UUID getIdBook() {
-        return idBook;
+    public UUID getId() {
+        return id;
     }
 
-    public void setIdBook(UUID idBook) {
-        this.idBook = idBook;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getName() {
