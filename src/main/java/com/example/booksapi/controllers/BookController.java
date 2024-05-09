@@ -7,10 +7,9 @@ import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/books")
@@ -20,6 +19,16 @@ public class BookController {
 
     public BookController(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
+    }
+
+    @GetMapping()
+    public ResponseEntity<Iterable<BookModel>> getBooks() {
+        return ResponseEntity.ok(bookRepository.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BookModel> getBook(@PathVariable UUID id) {
+        return ResponseEntity.ok(bookRepository.findById(id).orElse(null));
     }
 
     @PostMapping()
