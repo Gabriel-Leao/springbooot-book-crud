@@ -50,4 +50,14 @@ public class BookController {
         BeanUtils.copyProperties(bookRecordDto, bookModel);
         return ResponseEntity.ok(bookRepository.save(bookModel));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteBook(@PathVariable UUID id) {
+        Optional<BookModel> book = bookRepository.findById(id);
+        if (book.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found.");
+        }
+        bookRepository.delete(book.get());
+        return ResponseEntity.status(HttpStatus.OK).body("Book deleted.");
+    }
 }
