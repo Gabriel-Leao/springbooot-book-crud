@@ -9,8 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequestMapping("/books")
@@ -23,14 +26,20 @@ public class BookController {
     }
 
     @GetMapping()
-    public ResponseEntity<Iterable<BookModel>> getAllBooks() {
-        return ResponseEntity.ok(bookRepository.findAll());
+    public ResponseEntity<List<BookModel>> getAllBooks() {
+        List<BookModel> booksList = bookRepository.findAll();
+        if (!booksList.isEmpty()) {
+            for (BookModel book: booksList) {
+                book.add(linkTo(methodOn(BookController.class).getOneBook(book.getId())).withSelfRel());
+            }
+        }
+        return ResponseEntity.ok(booksList);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getOneBook(@PathVariable UUID id) {
         Optional<BookModel> book = bookRepository.findById(id);
-        return book.isEmpty() ? ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found.") : ResponseEntity.ok(book.get());
+        return book.isEmpty() ? ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found.") : ResponseEntity.ok(book.get().add(linkTo(methodOn(BookController.class).getAllBooks()).withRel("All books")));
     }
 
     @PostMapping()

@@ -1,6 +1,7 @@
 package com.example.booksapi.models;
 
 import jakarta.persistence.*;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -9,7 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name="books")
-public class BookModel implements Serializable {
+public class BookModel extends RepresentationModel<BookModel> implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
